@@ -92,6 +92,7 @@ class AWSSamlLogin {
             }
             const browser = yield puppeteer_1.default.launch({
                 headless: (this.basicAuth ? true : false),
+                userDataDir: '/tmp/aws-saml-login',
             });
             const pages = yield browser.pages();
             const page = pages[0];
@@ -104,7 +105,6 @@ class AWSSamlLogin {
                         const decoded = Buffer
                             .from(post.SAMLResponse, 'base64')
                             .toString('ascii');
-                        console.log(decoded);
                         const roles = decoded
                             .match(/arn:aws:iam.+?(?=<)/g)
                             .map((i) => {

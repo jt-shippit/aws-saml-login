@@ -94,6 +94,7 @@ class AWSSamlLogin {
 
     const browser = await puppeteer.launch({
       headless: (this.basicAuth ? true : false),
+      userDataDir: '/tmp/aws-saml-login',
     })
 
     const pages = await browser.pages()
@@ -111,8 +112,6 @@ class AWSSamlLogin {
           const decoded = Buffer
             .from(post.SAMLResponse, 'base64')
             .toString('ascii')
-
-          console.log(decoded)
 
           const roles = decoded
             .match(/arn:aws:iam.+?(?=<)/g)!
