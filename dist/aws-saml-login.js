@@ -45,7 +45,7 @@ class AWSSamlLogin {
             .option('-r, --refresh <profile_name>', `attempts to refresh an existing profile using config options saved
                               in "~/.config/aws-saml-login/config".  Will create the entry if it
                               does not exist.\n`)
-            .option('-a, --role_arn <role_arn>', `role arn to use to login as`)
+            .option('-a, --role_arn <role_arn>', `role ARN to login as`)
             .arguments('<login_url>');
         program.parse(args);
         if (!program.args.length && !program.opts().refresh) {
@@ -104,17 +104,19 @@ class AWSSamlLogin {
                         const decoded = Buffer
                             .from(post.SAMLResponse, 'base64')
                             .toString('ascii');
+                        console.log(decoded);
                         const roles = decoded
                             .match(/arn:aws:iam.+?(?=<)/g)
                             .map((i) => {
-                            const [p, r] = i.split(',');
+                            const [r, p] = i.split(',');
                             return { principal: p, role: r };
                         });
                         let roleMatch;
                         if (this.roleArn && this.roleArn.length) {
-                            roleMatch = roles.find(r => r.role === this.roleArn);
-                            if (!roleMatch)
-                                console.log(`${this.roleArn} not an available role.`);
+                            roleMatch = roles.find((r) => r.role === this.roleArn);
+                            if (!roleMatch) {
+                                console.log(`"${this.roleArn}" not an available role.`);
+                            }
                         }
                         if (roleMatch) {
                             this.role = roleMatch.role;

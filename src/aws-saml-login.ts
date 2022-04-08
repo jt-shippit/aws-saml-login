@@ -112,10 +112,12 @@ class AWSSamlLogin {
             .from(post.SAMLResponse, 'base64')
             .toString('ascii')
 
+          console.log(decoded)
+
           const roles = decoded
             .match(/arn:aws:iam.+?(?=<)/g)!
             .map((i) => {
-              const [p, r] = i.split(',')
+              const [r, p] = i.split(',')
               return {principal: p, role: r}
             })
 
