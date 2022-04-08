@@ -93,6 +93,11 @@ class AWSSamlLogin {
             const browser = yield puppeteer_1.default.launch({
                 headless: (this.basicAuth ? true : false),
                 userDataDir: '/tmp/aws-saml-login',
+                args: [`--window-size=640,480`],
+                defaultViewport: {
+                    width: 640,
+                    height: 480
+                }
             });
             const pages = yield browser.pages();
             const page = pages[0];
